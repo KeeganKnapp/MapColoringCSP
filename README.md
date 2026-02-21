@@ -25,4 +25,46 @@ To Use
 -Will continuously attempt to backtrack until a solution is found, even if one does not exist
 -Map selection, either US States or Ohio counties
 
+#Initialization flow
+```mermaid
+flowchart LR
+    A[MapColorer constructor] --> B[Store adj_dict and colors]
+    B --> C[Create empty dictionaries]
 
+    C --> D[initializeDomains]
+    D --> E[initializeConstraints]
+    E --> F{Start states provided?}
+
+    F -- Yes --> G[Assign start colors]
+    G --> H[updateDomains for each start state]
+    H --> I[Initialization complete]
+
+    F -- No --> J[Skip start coloring]
+    J --> I
+```
+
+#Main CSP search flow
+```mermaid
+flowchart LR
+    A[onePassState] --> B[getMRV]
+    B --> C{Multiple MRV states?}
+
+    C -- Yes --> D[getHighestDegree]
+    C -- No --> E[Pick nextState]
+
+    D --> E
+
+    E --> F[Choose color]
+    F --> G[checkValidity]
+    G --> H{Valid?}
+
+    H -- Yes --> I[Save domains]
+    I --> J[Color]
+    J --> K[updateDomains]
+    K --> L[Push and record]
+    L --> M[Success]
+
+    H -- No --> N[Backtrack]
+    N --> O[Restore]
+    O --> P[Return backtracked]
+```
